@@ -4,10 +4,14 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
@@ -33,7 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     private val activityResultLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions())
+            ActivityResultContracts.RequestMultiplePermissions()
+        )
         { permissions ->
 
             // Handle Permission granted/rejected
@@ -45,9 +50,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (!permissionGranted) {
-                Toast.makeText(baseContext,
+                Toast.makeText(
+                    baseContext,
                     "Permission request denied",
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 startCamera()
             }
@@ -74,7 +81,40 @@ class MainActivity : AppCompatActivity() {
 
     private fun captureVideo() {}
 
-    private fun startCamera() {}
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+
+        cameraProviderFuture.addListener({
+            // Used to bind the lifecycle of cameras to the lifecycle owner
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            // Preview
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(
+                        binding.cameraPreviewView.surfaceProvider
+                    )
+                }
+
+            // Select back camera as a default
+            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+            try {
+                // Unbind use cases before rebinding
+                cameraProvider.unbindAll()
+
+                // Bind use cases to camera
+                cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview
+                )
+
+            } catch (exception: Exception) {
+                Log.e(TAG, "Use case binding failed", exception)
+            }
+
+        }, ContextCompat.getMainExecutor(this))
+    }
 
     private fun requestPermissions() {
         activityResultLauncher.launch(REQUIRED_PERMISSIONS)
