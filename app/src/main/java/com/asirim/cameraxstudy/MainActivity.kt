@@ -17,6 +17,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
@@ -153,13 +154,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
             /**
-             * Step 7.2
+             * Step 8
              *
-             * 'imageCapture' and 'imageAnalyzer' closed at 'Implement VideoCapture use case' commit
+             * 'imageCapture' opened at 'Combine VideoCapture with other use cases' commit
              * */
-//            imageCapture = ImageCapture.Builder()
-//                .build()
-//
+            imageCapture = ImageCapture.Builder()
+                .build()
+
 //            val imageAnalyzer = ImageAnalysis.Builder()
 //                .build()
 //                .also {
@@ -172,7 +173,8 @@ class MainActivity : AppCompatActivity() {
 //                }
 
             val recorder = Recorder.Builder()
-                .setQualitySelector(QualitySelector.from(Quality.LOWEST))
+                .setQualitySelector(QualitySelector.from(Quality.HIGHEST,
+                    FallbackStrategy.higherQualityOrLowerThan(Quality.SD)))
                 .build()
             videoCapture = VideoCapture.withOutput(recorder)
 
@@ -189,11 +191,11 @@ class MainActivity : AppCompatActivity() {
                     cameraSelector,
                     preview,
                     /**
-                     * Step 7.2
+                     * Step 8
                      *
-                     * 'imageCapture' and 'imageAnalyzer' closed at 'Implement VideoCapture use case' commit
+                     * 'imageCapture' opened at 'Combine VideoCapture with other use cases' commit
                      * */
-//                    imageCapture,
+                    imageCapture,
 //                    imageAnalyzer,
                     videoCapture
                 )
