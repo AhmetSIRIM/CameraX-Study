@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+
     <Button
         android:id="@+id/button_image_capture"
         android:layout_width="100dp"
@@ -19,19 +20,21 @@
         android:elevation="3dp"
         android:text="@string/take_photo"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_video_capture"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/button_video_capture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="50dp"
-        android:elevation="3dp"
-        android:text="@string/start_capture"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_image_capture" />
+    <!--    'button_video_capture'closed at 'Combine imageCapture and imageAnalyzer at the end' commit-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/button_video_capture"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:layout_marginBottom="50dp"-->
+    <!--        android:elevation="3dp"-->
+    <!--        android:text="@string/start_capture"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/button_image_capture" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
